@@ -4,7 +4,7 @@ This repository contains the code for an R function that will report p-values fo
 
 This function requires a vector containing correlation coefficients, a vector containing the number of observations that went in to each corresponding correlation coefficient, and a vector containing names or identifiers of each correlation (character strings).
 
-This function draws heavily on the 'agricolae' package, particularly the 'orderPvalue' function. Thank you, Felipe de Mendiburu!
+This function draws heavily on the 'agricolae' package, particularly the 'orderPvalue' and 'lastC' functions. Thank you Felipe de Mendiburu!
 
 Works Cited
 
