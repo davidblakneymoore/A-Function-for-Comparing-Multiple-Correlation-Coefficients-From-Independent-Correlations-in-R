@@ -4,6 +4,8 @@ This repository contains the code for an R function that will report p-values fo
 
 This function requires a vector containing correlation coefficients, a vector containing the number of observations that went in to each corresponding correlation coefficient, and a vector containing names or identifiers of each correlation (character strings).
 
+This function draws heavily on the 'agricolae' package, particularly the 'orderPvalue' function. Thank you, Felipe de Mendiburu!
+
 Works Cited
 
 Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
