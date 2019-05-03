@@ -10,7 +10,7 @@ Numbers_of_Observations: a numeric or an integer vector containing the numbers o
 
 Identifiers: a character or a factor vector containing names to identify each corresponding correlation coefficient
 
-Data_Frame: an optional data frame to include such that only column names need to be supplied for the first three arguments instead of using the 'Data_Frame$Column_Name' syntax
+Data_Frame: an optional data frame to include such that column names can be supplied for the first three arguments (the data frame that these columns are from should be provided for this Data_Frame argument)
 
 Alpha = 0.05: a value of alpha against which significance can be tested (the default is 0.05)
 
