@@ -8,7 +8,7 @@
 # 'Numbers_of_Observations' must be either an integer vector or a numeric vector containing the sample sizes of each corresponding correlation coefficient.
 # 'Identifiers' must be a vector containing names of the correlations.
 
-Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Numbers_of_Observations, Identifiers, Data_Frame, Alpha = 0.05, Control_for_Experimentwise_Error = TRUE, The_Strength_of_the_Correlation_is_More_Important_Than_the_Sign_of_the_Correlation = FALSE) {
+Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Numbers_of_Observations, Identifiers, Data_Frame, Alpha = 0.05, Control_for_Experimentwise_Error = TRUE) {
   if (!missing(Data_Frame)) {
     Correlation_Coefficients <- as.numeric(Data_Frame[[deparse(substitute(Correlation_Coefficients))]])
     Numbers_of_Observations <- as.numeric(Data_Frame[[deparse(substitute(Numbers_of_Observations))]])
@@ -18,23 +18,18 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
     Numbers_of_Observations <- as.numeric(Numbers_of_Observations)
     Identifiers <- as.character(Identifiers)
   }
-  if (The_Strength_of_the_Correlation_is_More_Important_Than_the_Sign_of_the_Correlation == TRUE) {
-    Corrected_Correlation_Coefficients <- 2 * abs(Correlation_Coefficients) - 1
-  } else {
-    Corrected_Correlation_Coefficients <- Correlation_Coefficients
-  }
-  Unsorted_Data_Frame <- data.frame(Identifiers = Identifiers, Correlation_Coefficients = Correlation_Coefficients, Corrected_Correlation_Coefficients = Corrected_Correlation_Coefficients, Numbers_of_Observations = Numbers_of_Observations)
-  Sorted_Data_Frame <- Unsorted_Data_Frame[order(Unsorted_Data_Frame$Corrected_Correlation_Coefficients, decreasing = TRUE), ]
+  Unsorted_Data_Frame <- data.frame(Identifiers = Identifiers, Correlation_Coefficients = Correlation_Coefficients, Numbers_of_Observations = Numbers_of_Observations)
+  Sorted_Data_Frame <- Unsorted_Data_Frame[order(Unsorted_Data_Frame$Correlation_Coefficients, decreasing = TRUE), ]
   rownames(Sorted_Data_Frame) <- NULL
-  Corrected_Correlation_Coefficients <- Sorted_Data_Frame$Corrected_Correlation_Coefficients
+  Correlation_Coefficients <- Sorted_Data_Frame$Correlation_Coefficients
   Numbers_of_Observations <- Sorted_Data_Frame$Numbers_of_Observations
   Identifiers <- Sorted_Data_Frame$Identifiers
-  Number_of_Pairwise_Comparisons <- choose(length(Corrected_Correlation_Coefficients), 2)
+  Number_of_Pairwise_Comparisons <- choose(length(Correlation_Coefficients), 2)
   Function_for_Comparing_Correlation_Coefficients <- function (Correlation_Coefficient_1, Correlation_Coefficient_2, Number_of_Observations_1, Number_of_Observations_2) {
     (2 * (1 - pnorm(abs(((0.5 * log((1 + Correlation_Coefficient_1) / (1 - Correlation_Coefficient_1))) - (0.5 * log((1 + Correlation_Coefficient_2) / (1 - Correlation_Coefficient_2)))) / (((1 / (Number_of_Observations_1 - 3)) + (1 / (Number_of_Observations_2 - 3))) ^ 0.5)))))
   }
   if (Control_for_Experimentwise_Error == TRUE) {
-    Corrected_Alpha <- 1 - ((1 - Alpha) ^ (1 / choose(length(Corrected_Correlation_Coefficients), 2)))
+    Corrected_Alpha <- 1 - ((1 - Alpha) ^ (1 / choose(length(Correlation_Coefficients), 2)))
   } else {
     Corrected_Alpha <- Alpha
   }
@@ -57,10 +52,10 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
   Counter_3 <- 0
   Counter_4 <- 0
   p_Value <- NULL
-  for (i in Corrected_Correlation_Coefficients[1:(length(Corrected_Correlation_Coefficients) - 1)]) {
+  for (i in Correlation_Coefficients[1:(length(Correlation_Coefficients) - 1)]) {
     Counter_2 <- Counter_2 + 1
-    Counter_3 <- which(Corrected_Correlation_Coefficients == i)
-    for (j in Corrected_Correlation_Coefficients[((which(Corrected_Correlation_Coefficients == i)) + 1):length(Corrected_Correlation_Coefficients)]) {
+    Counter_3 <- which(Correlation_Coefficients == i)
+    for (j in Correlation_Coefficients[((which(Correlation_Coefficients == i)) + 1):length(Correlation_Coefficients)]) {
       Counter_3 <- Counter_3 + 1
       Counter_4 <- Counter_4 + 1
       p_Value[Counter_4] <- Function_for_Comparing_Correlation_Coefficients(i, j, Numbers_of_Observations[Counter_2], Numbers_of_Observations[Counter_3])
@@ -73,18 +68,18 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
   names(p_Value) <- NULL
   names(Significance) <- NULL
   Pairwise_Comparison_Data_Frame <- data.frame(Correlation_1 = Correlation_1, Correlation_2 = Correlation_2, Comparison = Comparison, p_Value = p_Value, Significance = Significance)
-  Matrix_of_p_Values <- matrix(1, nrow = length(Corrected_Correlation_Coefficients), ncol = length(Corrected_Correlation_Coefficients))
+  Matrix_of_p_Values <- matrix(1, nrow = length(Correlation_Coefficients), ncol = length(Correlation_Coefficients))
   Matrix_of_p_Values[lower.tri(Matrix_of_p_Values, diag = FALSE)] <- Pairwise_Comparison_Data_Frame$p_Value
   Matrix_of_p_Values <- t(Matrix_of_p_Values)
   Matrix_of_p_Values[lower.tri(Matrix_of_p_Values, diag = FALSE)] <- Pairwise_Comparison_Data_Frame$p_Value
   rownames(Matrix_of_p_Values) <- colnames(Matrix_of_p_Values) <- Identifiers
   Separation_Letters_and_Symbols <- c(letters[1:26], LETTERS[1:26], 1:9, c(".", "+", "-", "*", "/", "#", "$", "%", "&", "^", "[", "]", ":", "@", ";"))
-  Separation_Lettering <- rep("", length(Corrected_Correlation_Coefficients))
+  Separation_Lettering <- rep("", length(Correlation_Coefficients))
   i <- 1
   j <- 1
   Counter_5 <- 0
   Counter_6 <- 1
-  Counter_7 <- length(Corrected_Correlation_Coefficients)
+  Counter_7 <- length(Correlation_Coefficients)
   Counter_8 <- 0
   Separation_Lettering[1] <- Separation_Letters_and_Symbols[Counter_6]
   Row_Number <- as.numeric(rownames(Sorted_Data_Frame))
@@ -94,10 +89,10 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
     Last_Character <- substr(Getting_Rid_of_Spaces_at_the_End_of_Character_Strings, Number_of_Characters_in_Character_Strings, Number_of_Characters_in_Character_Strings)
     return (Last_Character)
   }
-  while (i < length(Corrected_Correlation_Coefficients)) {
+  while (i < length(Correlation_Coefficients)) {
     Counter_5 <- Counter_5 + 1
-    if (Counter_5 > length(Corrected_Correlation_Coefficients)) {break}
-    for (j in i:length(Corrected_Correlation_Coefficients)) {
+    if (Counter_5 > length(Correlation_Coefficients)) {break}
+    for (j in i:length(Correlation_Coefficients)) {
       Nonsignificance_of_p_Value <- Matrix_of_p_Values[Row_Number[j], Row_Number[i]] > Corrected_Alpha
       if (Nonsignificance_of_p_Value) {
         if (Last_Character_Function(Separation_Lettering[j]) != Separation_Letters_and_Symbols[Counter_6]) {
@@ -109,7 +104,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
         Counter_7 <- j
         Counter_8 <- 0
         Counter_9 <- i
-        for (k in Counter_7:length(Corrected_Correlation_Coefficients)) {
+        for (k in Counter_7:length(Correlation_Coefficients)) {
           Separation_Lettering[k] <- paste(Separation_Lettering[k], "", sep = "")
         }
         Separation_Lettering[Counter_7] <- paste(Separation_Lettering[Counter_7], Separation_Letters_and_Symbols[Counter_6], sep = "")
@@ -128,7 +123,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
     }
   }
   Separation_Lettering_Data_Frame <- data.frame(Identifier = Sorted_Data_Frame$Identifiers, Correlation_Coefficient = Sorted_Data_Frame$Correlation_Coefficients, Number_of_Observations = Sorted_Data_Frame$Numbers_of_Observations, Separation_Lettering = Separation_Lettering)
-  Metadata <- data.frame(Number_of_Correlation_Coefficients_to_Compare = length(Correlation_Coefficients), Number_of_Pairwise_Comparisons = Number_of_Pairwise_Comparisons, Experimentwise_Error = Alpha, Comparisonwise_Error = Corrected_Alpha, Conservative_or_Liberal = ifelse(Control_for_Experimentwise_Error == TRUE, "Conservative", "Liberal"), Any_Significantly_Different_Correlation_Coefficients = ifelse(any(unlist(sapply(Pairwise_Comparison_Data_Frame$Significance, grepl, "Significantly Different")) == T), "Yes", "No"), Is_the_Strength_of_the_Correlation_More_Important_Than_the_Sign_of_the_Correlation = ifelse(The_Strength_of_the_Correlation_is_More_Important_Than_the_Sign_of_the_Correlation == FALSE, "No", "Yes"))
+  Metadata <- data.frame(Number_of_Correlation_Coefficients_to_Compare = length(Correlation_Coefficients), Number_of_Pairwise_Comparisons = Number_of_Pairwise_Comparisons, Experimentwise_Error = Alpha, Comparisonwise_Error = Corrected_Alpha, Conservative_or_Liberal = ifelse(Control_for_Experimentwise_Error == TRUE, "Conservative", "Liberal"), Any_Significantly_Different_Correlation_Coefficients = ifelse(any(unlist(sapply(Pairwise_Comparison_Data_Frame$Significance, grepl, "Significantly Different")) == T), "Yes", "No"))
   return (Correlation_Coefficient_Separation_Test_Results <- list(Metadata = Metadata, Pairwise_Comparison_Data_Frame = Pairwise_Comparison_Data_Frame, Separation_Lettering_Data_Frame = Separation_Lettering_Data_Frame))
 }
 
@@ -142,7 +137,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
 # Example:
 
 Practice_Data_Frame <- data.frame(Name = paste("Correlation", LETTERS[1:5], sep = " "), Coefficient_of_Correlation = sample(seq(-0.999, 0.999, length.out = 1000), 5), Sample_Size = sample(10:100, 5))
-Output_Data <- Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame, The_Strength_of_the_Correlation_is_More_Important_Than_the_Sign_of_the_Correlation = F)
+Output_Data <- Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame)
 Output_Data$Pairwise_Comparison_Data_Frame
 Output_Data$Separation_Lettering_Data_Frame
 Output_Data$Metadata
