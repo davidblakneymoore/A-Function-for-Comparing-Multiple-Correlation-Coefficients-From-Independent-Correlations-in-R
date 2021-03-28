@@ -19,6 +19,8 @@ Control_for_Experimentwise_Error = TRUE: an argument specifying whether or not t
 
 Though this function only uses base R functions, it was heavily inspired by the 'agricolae' package, particularly the 'orderPvalue' and 'lastC' functions. Thank you Felipe de Mendiburu!
 
+I'm also indebted to my former advisor, Karl Guillard, for introducing me to this technique and for generally sparking my interest in statistics.
+
 Works Cited
 
 de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Research. R package version 1.2-8. <https://CRAN.R-project.org/package=agricolae>.
