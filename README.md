@@ -23,7 +23,7 @@ I'm also indebted to my former advisor, Karl Guillard, for introducing me to thi
 
 This function has been cited in at least one peer-reviewed journal article (Findor et al., 2021).
 
-Works Cited
+# Works Cited
 
 de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Research. R package version 1.2-8. <https://CRAN.R-project.org/package=agricolae>.
 
