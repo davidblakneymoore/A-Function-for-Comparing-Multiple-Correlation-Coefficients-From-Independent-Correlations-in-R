@@ -21,7 +21,7 @@ Though this function only uses base R functions, it was heavily inspired by the 
 
 I'm also indebted to my former advisor, Karl Guillard, for introducing me to this technique and for generally sparking my interest in statistics.
 
-This function has been cited in at least one peer-reviewed journal article (Findor et al., 2021).
+This function has been cited in a peer-reviewed journal article (Findor et al., 2021).
 
 <b>Works Cited</b>
 
