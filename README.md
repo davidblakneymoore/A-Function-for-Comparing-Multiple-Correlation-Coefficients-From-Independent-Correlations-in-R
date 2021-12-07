@@ -3,7 +3,7 @@
 
 This repository contains the code for an R function that will report p-values for pairwise correlation coefficient comparisons and that will report separation lettering for correlation coefficients. This code is based on the work of Levy (1977).
 
-This function takes 6 arguments (the first 3 are required):
+This function takes 6 arguments, and the first 3 are required.
 
 `Correlation_Coefficients` is a numeric vector containing the correlation coefficients to be analyzed.
 
