@@ -16,7 +16,7 @@ This function takes 6 arguments, and the first 3 are required.
 
 `Control_for_Experimentwise_Error = TRUE` is an argument specifying whether or not this function should give conservative estimates (by holding the experimentwise error rate at the given value of alpha) or liberal estimates (by using the given value of alpha for each pairwise comparison). The default, `TRUE`, holds the experimentwise error rate at alpha and calculates the comparisonwise error rate based on the number of pairwise comparisons.
 
-Though this function only uses base R functions, it was heavily inspired by the 'agricolae' package, particularly the `orderPvalue` and `lastC` functions. Thank you Felipe de Mendiburu!
+Though this function only uses base R functions, it was heavily inspired by the `agricolae` package, particularly the `orderPvalue` and `lastC` functions. Thank you Felipe de Mendiburu!
 
 I'm also indebted to my former advisor, Karl Guillard, for introducing me to this technique and for generally sparking my interest in statistics.
 
