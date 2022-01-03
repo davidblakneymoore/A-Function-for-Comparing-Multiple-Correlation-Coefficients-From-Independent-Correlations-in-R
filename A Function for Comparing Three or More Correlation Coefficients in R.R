@@ -2,7 +2,7 @@
 # A Function for Comparing Multiple Correlation Coefficients
 
 
-# Explanation
+# The Explanation
 
 # Below is a function for comparing 3 or more correlation coefficients based on
 # Levy (1977).
@@ -169,7 +169,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
 # Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
 
 
-# Example
+# An Example
 
 # Here's an example with some made-up data.
 
