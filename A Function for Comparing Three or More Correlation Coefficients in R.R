@@ -1,6 +1,10 @@
 
 # A Function for Comparing Multiple Correlation Coefficients
 
+# David Moore
+
+# December 2018
+
 
 # The Explanation
 
