@@ -1,22 +1,56 @@
 
-# Below is a function for comparing 3 or more correlation coefficients based on Levy (1977).
-# This function only uses base R functions, but it was heavily inspired by the 'agricolae' package, particularly the 'orderPvalue' and 'lastC' functions. Thank you Felipe de Mendiburu!
-# This function returns a 'Pairwise_Comparison_Data_Frame' data frame containing p values for each pairwise comparison.
-# This function returns a 'Separation_Lettering_Data_Frame' data frame containing each correlation coefficient and separation lettering.
+# A Function for Comparing Multiple Correlation Coefficients
+
+
+# Explanation
+
+# Below is a function for comparing 3 or more correlation coefficients based on
+# Levy (1977).
+
+# This function only uses 'base' R functions, but it was heavily inspired by
+# the 'agricolae' package, particularly the 'orderPvalue' and 'lastC'
+# functions. Thank you Felipe de Mendiburu!
+
+# This function returns a 'Pairwise_Comparison_Data_Frame' data frame
+# containing p values for each pairwise comparison.
+
+# This function returns a 'Separation_Lettering_Data_Frame' data frame
+# containing each correlation coefficient and separation lettering.
+
 # This function returns a 'Metadata' data frame containing metadata.
-# 'Correlation_Coefficients' must be a numeric vector containing correlation coefficients.
-# 'Numbers_of_Observations' must be either an integer vector or a numeric vector containing the sample sizes of each corresponding correlation coefficient.
+
+# 'Correlation_Coefficients' must be a numeric vector containing correlation
+# coefficients.
+
+# 'Numbers_of_Observations' must be either an integer vector or a numeric
+# vector containing the sample sizes of each corresponding correlation
+# coefficient.
+
 # 'Identifiers' must be a vector containing names of the correlations.
+
+
+# The Function
 
 Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Numbers_of_Observations, Identifiers, Data_Frame, Alpha = 0.05, Control_for_Experimentwise_Error = TRUE) {
   if (!missing(Data_Frame)) {
-    Correlation_Coefficients <- as.numeric(Data_Frame[[deparse(substitute(Correlation_Coefficients))]])
-    Numbers_of_Observations <- as.numeric(Data_Frame[[deparse(substitute(Numbers_of_Observations))]])
-    Identifiers <- as.character(Data_Frame[[deparse(substitute(Identifiers))]])
-  } else if (missing(Data_Frame)) {
-    Correlation_Coefficients <- as.numeric(Correlation_Coefficients)
-    Numbers_of_Observations <- as.numeric(Numbers_of_Observations)
-    Identifiers <- as.character(Identifiers)
+    Correlation_Coefficients <- Data_Frame[[deparse(substitute(Correlation_Coefficients))]]
+    Numbers_of_Observations <- Data_Frame[[deparse(substitute(Numbers_of_Observations))]]
+    Identifiers <- Data_Frame[[deparse(substitute(Identifiers))]]
+  }
+  if (!is.numeric(Correlation_Coefficients)) {
+    stop ("`Correlation_Coefficients' must be numeric.")
+  }
+  if (!is.numeric(Numbers_of_Observations)) {
+    stop ("'Numbers_of_Observations' must be numeric.")
+  }
+  if (!is.numeric(Alpha) | length(Alpha) != 1) {
+    stop ("'Alpha' must be a single numeric value.")
+  }
+  if (Alpha < 0 | Alpha > 1) {
+    stop ("'Alpha' must be a number between 0 and 1 inclusive.")
+  }
+  if (!is.logical(Control_for_Experimentwise_Error) | length(Control_for_Experimentwise_Error) != 1) {
+    stop ("'Control_for_Experimentwise_Error' must be a single logical value.")
   }
   Unsorted_Data_Frame <- data.frame(Identifiers = Identifiers, Correlation_Coefficients = Correlation_Coefficients, Numbers_of_Observations = Numbers_of_Observations)
   Sorted_Data_Frame <- Unsorted_Data_Frame[order(Unsorted_Data_Frame$Correlation_Coefficients, decreasing = TRUE), ]
@@ -131,13 +165,40 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
 # Works Cited
 
 # de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Research. R package version 1.2-8. <https://CRAN.R-project.org/package=agricolae>.
+
 # Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
 
 
-# Example:
+# Example
 
-Practice_Data_Frame <- data.frame(Name = paste("Correlation", LETTERS[1:5], sep = " "), Coefficient_of_Correlation = sample(seq(-0.999, 0.999, length.out = 1000), 5), Sample_Size = sample(10:100, 5))
-Output_Data <- Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame)
-Output_Data$Pairwise_Comparison_Data_Frame
-Output_Data$Separation_Lettering_Data_Frame
-Output_Data$Metadata
+# Here's an example with some made-up data.
+
+Practice_Data_Frame <- structure(list(Name = c("Correlation A", "Correlation B", "Correlation C", "Correlation D", "Correlation E"), Coefficient_of_Correlation = c(-0.339, 0.307, 0.919, -0.679, -0.495), Sample_Size = c(42L, 10L, 46L, 98L, 63L)), class = "data.frame", row.names = c(NA, -5L))
+Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame)
+
+# Here's the output from the preceding line of code.
+
+# $Metadata
+#   Number_of_Correlation_Coefficients_to_Compare Number_of_Pairwise_Comparisons Experimentwise_Error Comparisonwise_Error Conservative_or_Liberal Any_Significantly_Different_Correlation_Coefficients
+# 1                                             5                             10                 0.05          0.005116197            Conservative                                                  Yes
+# 
+# $Pairwise_Comparison_Data_Frame
+#    Correlation_1 Correlation_2                      Comparison     p_Value                Significance
+# 1  Correlation C Correlation B Correlation C vs. Correlation B 0.001905605     Significantly Different
+# 2  Correlation C Correlation A Correlation C vs. Correlation A 0.000000000     Significantly Different
+# 3  Correlation C Correlation E Correlation C vs. Correlation E 0.000000000     Significantly Different
+# 4  Correlation C Correlation D Correlation C vs. Correlation D 0.000000000     Significantly Different
+# 5  Correlation B Correlation A Correlation B vs. Correlation A 0.102535805 Not Significantly Different
+# 6  Correlation B Correlation E Correlation B vs. Correlation E 0.031323817 Not Significantly Different
+# 7  Correlation B Correlation D Correlation B vs. Correlation D 0.003474832     Significantly Different
+# 8  Correlation A Correlation E Correlation A vs. Correlation E 0.356390060 Not Significantly Different
+# 9  Correlation A Correlation D Correlation A vs. Correlation D 0.012632705 Not Significantly Different
+# 10 Correlation E Correlation D Correlation E vs. Correlation D 0.084377692 Not Significantly Different
+# 
+# $Separation_Lettering_Data_Frame
+#      Identifier Correlation_Coefficient Number_of_Observations Separation_Lettering
+# 1 Correlation C                   0.919                     46                    a
+# 2 Correlation B                   0.307                     10                    b
+# 3 Correlation A                  -0.339                     42                   bc
+# 4 Correlation E                  -0.495                     63                   bc
+# 5 Correlation D                  -0.679                     98                    c
