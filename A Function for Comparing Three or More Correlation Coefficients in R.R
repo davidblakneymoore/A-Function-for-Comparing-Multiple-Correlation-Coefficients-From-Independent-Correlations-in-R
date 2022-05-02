@@ -203,6 +203,10 @@ Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name
 
 # Works Cited
 
-# de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Research. R package version 1.2-8. <https://CRAN.R-project.org/package=agricolae>.
+# de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural
+# Research. R package version 1.2-8.
+# <https://CRAN.R-project.org/package=agricolae>.
 
-# Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
+# Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes
+# associated with correlations, proportions or variances. Br. J. Math. Stat.
+# Psychol. 30:137-139.
