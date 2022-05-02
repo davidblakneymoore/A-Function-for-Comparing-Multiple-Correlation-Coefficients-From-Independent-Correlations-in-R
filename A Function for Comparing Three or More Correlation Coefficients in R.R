@@ -12,7 +12,7 @@
 # Levy (1977).
 
 # This function only uses 'base' R functions, but it was heavily inspired by
-# the 'agricolae' package, particularly the 'orderPvalue' and 'lastC'
+# the 'agricolae' package, particularly the 'orderPvalue()' and 'lastC()'
 # functions. Thank you Felipe de Mendiburu!
 
 # This function returns a 'Pairwise_Comparison_Data_Frame' data frame
@@ -166,13 +166,6 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
 }
 
 
-# Works Cited
-
-# de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Research. R package version 1.2-8. <https://CRAN.R-project.org/package=agricolae>.
-
-# Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
-
-
 # An Example
 
 # Here's an example with some made-up data.
@@ -206,3 +199,10 @@ Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name
 # 3 Correlation A                  -0.339                     42                   bc
 # 4 Correlation E                  -0.495                     63                   bc
 # 5 Correlation D                  -0.679                     98                    c
+
+
+# Works Cited
+
+# de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Research. R package version 1.2-8. <https://CRAN.R-project.org/package=agricolae>.
+
+# Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
