@@ -61,12 +61,13 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
       stop ("'Data_Frame' must be of class 'data.frame'.")
     }
     Data_Frame <- Data_Frame[, c(Correlation_Coefficients_Name, Numbers_of_Observations_Name, Identifiers_Name)]
+    colnames(Data_Frame) <- c("Correlation_Coefficients", "Numbers_of_Observations", "Identifiers")
   } else if (missing(Data_Frame)) {
-    Data_Frame <- data.frame(Correlation_Coefficients = Correlation_Coefficients, Numbers_of_Observations = Numbers_of_Observations, Identifiers = Identifiers)
+    Data_Frame <- data.frame(Correlation_Coefficients, Numbers_of_Observations, Identifiers)
   }
-  Correlation_Coefficients <- Data_Frame[, c(Correlation_Coefficients_Name)]
-  Numbers_of_Observations <- Data_Frame[, c(Numbers_of_Observations_Name)]
-  Identifiers <- Data_Frame[, c(Identifiers_Name)]
+  Correlation_Coefficients <- Data_Frame$Correlation_Coefficients
+  Numbers_of_Observations <- Data_Frame$Numbers_of_Observations
+  Identifiers <- Data_Frame$Identifiers
   if (!is.numeric(Correlation_Coefficients)) {
     stop ("`Correlation_Coefficients' must be numeric.")
   }
@@ -198,7 +199,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
 # Here's an example with some made-up data.
 
 Practice_Data_Frame <- structure(list(Name = c("Correlation A", "Correlation B", "Correlation C", "Correlation D", "Correlation E"), Coefficient_of_Correlation = c(-0.339, 0.307, 0.919, -0.679, -0.495), Sample_Size = c(42L, 10L, 46L, 98L, 63L)), class = "data.frame", row.names = c(NA, -5L))
-Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame)
+Comparing_Correlation_Coefficients(Practice_Data_Frame$Coefficient_of_Correlation, Practice_Data_Frame$Sample_Size, Practice_Data_Frame$Name)
 
 # Here's the output from the preceding line of code.
 
