@@ -23,24 +23,50 @@
 
 # This function returns a 'Metadata' data frame containing metadata.
 
-# 'Correlation_Coefficients' must be a numeric vector containing correlation
+# This function takes 6 arguments, and the first 3 are required.
+
+# 'Correlation_Coefficients' is a numeric vector containing the correlation
+# coefficients to be analyzed.
+
+# 'Numbers_of_Observationsis' a numeric or an integer vector containing the
+# numbers of observations that went in to each of the corresponding correlation
 # coefficients.
 
-# 'Numbers_of_Observations' must be either an integer vector or a numeric
-# vector containing the sample sizes of each corresponding correlation
-# coefficient.
+# 'Identifiers' is a character or a factor vector containing names to identify
+# each corresponding correlation coefficient.
 
-# 'Identifiers' must be a vector containing names of the correlations.
+# 'Data_Frame' is an optional data frame to include such that column names can
+# be supplied for the first three arguments (the data frame that these columns
+# are from should be provided for this 'Data_Frame' argument).
+
+# 'Alpha = 0.05' is a value of alpha against which significance can be tested
+# (the default is '0.05').
+
+# 'Control_for_Experimentwise_Error = TRUE' is an argument specifying whether
+# or not this function should give conservative estimates (by holding the
+# experimentwise error rate at the given value of alpha) or liberal estimates
+# (by using the given value of alpha for each pairwise comparison). The
+# default, TRUE, holds the experimentwise error rate at alpha and calculates
+# the comparisonwise error rate based on the number of pairwise comparisons.
 
 
 # The Function
 
 Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Numbers_of_Observations, Identifiers, Data_Frame, Alpha = 0.05, Control_for_Experimentwise_Error = TRUE) {
+  Correlation_Coefficients_Name <- deparse(substitute(Correlation_Coefficients))
+  Numbers_of_Observations_Name <- deparse(substitute(Numbers_of_Observations))
+  Identifiers_Name <- deparse(substitute(Identifiers))
   if (!missing(Data_Frame)) {
-    Correlation_Coefficients <- Data_Frame[[deparse(substitute(Correlation_Coefficients))]]
-    Numbers_of_Observations <- Data_Frame[[deparse(substitute(Numbers_of_Observations))]]
-    Identifiers <- Data_Frame[[deparse(substitute(Identifiers))]]
+    if (class(Data_Frame) != 'data.frame') {
+      stop ("'Data_Frame' must be of class 'data.frame'.")
+    }
+    Data_Frame <- Data_Frame[, c(Correlation_Coefficients_Name, Numbers_of_Observations_Name, Identifiers_Name)]
+  } else if (missing(Data_Frame)) {
+    Data_Frame <- data.frame(Correlation_Coefficients = Correlation_Coefficients, Numbers_of_Observations = Numbers_of_Observations, Identifiers = Identifiers)
   }
+  Correlation_Coefficients <- Data_Frame[, c(Correlation_Coefficients_Name)]
+  Numbers_of_Observations <- Data_Frame[, c(Numbers_of_Observations_Name)]
+  Identifiers <- Data_Frame[, c(Identifiers_Name)]
   if (!is.numeric(Correlation_Coefficients)) {
     stop ("`Correlation_Coefficients' must be numeric.")
   }
@@ -51,7 +77,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
     stop ("'Alpha' must be a single numeric value.")
   }
   if (Alpha < 0 | Alpha > 1) {
-    stop ("'Alpha' must be a number between 0 and 1 inclusive.")
+    stop ("'Alpha' must be a number between 0 and 1 (inclusive).")
   }
   if (!is.logical(Control_for_Experimentwise_Error) | length(Control_for_Experimentwise_Error) != 1) {
     stop ("'Control_for_Experimentwise_Error' must be a single logical value.")
@@ -161,6 +187,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
     }
   }
   Separation_Lettering_Data_Frame <- data.frame(Identifier = Sorted_Data_Frame$Identifiers, Correlation_Coefficient = Sorted_Data_Frame$Correlation_Coefficients, Number_of_Observations = Sorted_Data_Frame$Numbers_of_Observations, Separation_Lettering = Separation_Lettering)
+  colnames(Separation_Lettering_Data_Frame)[which(colnames(Separation_Lettering_Data_Frame) != 'Separation_Lettering')] <- c(Identifiers_Name, Correlation_Coefficients_Name, Numbers_of_Observations_Name)
   Metadata <- data.frame(Number_of_Correlation_Coefficients_to_Compare = length(Correlation_Coefficients), Number_of_Pairwise_Comparisons = Number_of_Pairwise_Comparisons, Experimentwise_Error = Alpha, Comparisonwise_Error = Corrected_Alpha, Conservative_or_Liberal = ifelse(Control_for_Experimentwise_Error == TRUE, "Conservative", "Liberal"), Any_Significantly_Different_Correlation_Coefficients = ifelse(any(unlist(sapply(Pairwise_Comparison_Data_Frame$Significance, grepl, "Significantly Different")) == T), "Yes", "No"))
   return (Correlation_Coefficient_Separation_Test_Results <- list(Metadata = Metadata, Pairwise_Comparison_Data_Frame = Pairwise_Comparison_Data_Frame, Separation_Lettering_Data_Frame = Separation_Lettering_Data_Frame))
 }
@@ -193,12 +220,12 @@ Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name
 # 10 Correlation E Correlation D Correlation E vs. Correlation D 0.084377692 Not Significantly Different
 # 
 # $Separation_Lettering_Data_Frame
-#      Identifier Correlation_Coefficient Number_of_Observations Separation_Lettering
-# 1 Correlation C                   0.919                     46                    a
-# 2 Correlation B                   0.307                     10                    b
-# 3 Correlation A                  -0.339                     42                   bc
-# 4 Correlation E                  -0.495                     63                   bc
-# 5 Correlation D                  -0.679                     98                    c
+#            Name Coefficient_of_Correlation Sample_Size Separation_Lettering
+# 1 Correlation C                      0.919          46                    a
+# 2 Correlation B                      0.307          10                    b
+# 3 Correlation A                     -0.339          42                   bc
+# 4 Correlation E                     -0.495          63                   bc
+# 5 Correlation D                     -0.679          98                    c
 
 
 # Works Cited
