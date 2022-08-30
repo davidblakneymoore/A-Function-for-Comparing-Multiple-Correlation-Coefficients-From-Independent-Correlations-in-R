@@ -20,9 +20,11 @@ Though this function only uses `base` functions, it was heavily inspired by the 
 
 I'm also indebted to my former advisor, Karl Guillard, for introducing me to this technique and for generally sparking my interest in statistics.
 
-This function has been cited in a peer-reviewed journal article (Findor et al., 2021).
+This function has been cited in two peer-reviewed journal articles (Chue and Yeo, 2022; Findor et al., 2021).
 
 <b>Works Cited</b>
+
+Chue, K.L., and A. Yeo. 2022. Exploring associations of positive relationships and adolescent well-being across cultures. Youth Soc. 00:1-12.
 
 de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Research. R package version 1.2-8. <https://CRAN.R-project.org/package=agricolae>.
 
