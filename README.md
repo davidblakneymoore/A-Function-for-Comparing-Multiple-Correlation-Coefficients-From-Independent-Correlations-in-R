@@ -20,7 +20,7 @@ Though this function only uses `base` functions, it was heavily inspired by the 
 
 I'm also indebted to my former advisor, Karl Guillard, for introducing me to this technique and for generally sparking my interest in statistics.
 
-This function has been cited in two peer-reviewed journal articles (Chue and Yeo, 2022; Findor et al., 2021).
+This function has been cited in three peer-reviewed journal articles (Chue and Yeo, 2022; Findor et al., 2021; Matko and Sedlmeier, 2023).
 
 <b>Works Cited</b>
 
@@ -31,3 +31,5 @@ de Mendiburu, F. 2017. agricolae: Statistical Procedures for Agricultural Resear
 Findor, A., M. Hruska, P. Jankovská, and M. Pobudová. 2021. Re-examining public opinion preferences for migrant categorizations: “Refugees” are evaluated more negatively than “migrants” and “foreigners” related to participants’ direct, extended, and mass-mediated intergroup contact experiences. Int. J. Intercult. Relat. 80:262-273.
 
 Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
+
+Matko, K., and P. Sedlmeier. 2023. Which meditation technique for whom? An experimental single-case study comparing concentrative, humming, observing-thoughts, and walking meditation.
