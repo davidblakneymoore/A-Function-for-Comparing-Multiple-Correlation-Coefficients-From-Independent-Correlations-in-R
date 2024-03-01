@@ -20,9 +20,11 @@ Though this function only uses `base` functions, it was heavily inspired by the 
 
 I'm also indebted to my former advisor, Karl Guillard, for introducing me to this technique and for generally sparking my interest in statistics.
 
-This function has been cited in three peer-reviewed journal articles (Chue and Yeo, 2022; Findor et al., 2021; Matko and Sedlmeier, 2023).
+This function has been cited in peer-reviewed journal articles and a book chapter (Beghin, 2023; Chue and Yeo, 2022; Findor et al., 2021; Matko and Sedlmeier, 2023).
 
 <b>Works Cited</b>
+
+Beghin, G. 2023. Does the Lay Concept of Mental Disorder Necessitate a Dysfunction? Advances in Experimental Philosophy of Medicine, edited by Kristien Hens and Andreas De Block. Bloomsbury Publishing. Pp. 71-96.
 
 Chue, K.L., and A. Yeo. 2022. Exploring associations of positive relationships and adolescent well-being across cultures. Youth Soc. 00:1-12.
 
