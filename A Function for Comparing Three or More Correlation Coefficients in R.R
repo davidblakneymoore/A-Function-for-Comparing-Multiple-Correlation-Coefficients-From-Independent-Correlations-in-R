@@ -1,5 +1,6 @@
 
-# A Function for Comparing Multiple Correlation Coefficients
+# A Function for Comparing Multiple Correlation Coefficients From Independent
+# Correlations
 
 # David Moore
 # davidblakneymoore@gmail.com
@@ -9,11 +10,13 @@
 # The Explanation
 
 # Below is a function for comparing 3 or more correlation coefficients based on
-# Levy (1977).
+# a well established and published method (Levy, 1977). Importantly, it assumes
+# the correlations are independent. When independence cannot be assumed, please
+# consider using a different procedure.
 
 # This function only uses 'base' R functions, but it was heavily inspired by
 # the 'agricolae' package, particularly the 'orderPvalue()' and 'lastC()'
-# functions. Thank you Felipe de Mendiburu!
+# functions (de Mendiburu, 2017).
 
 # This function returns a 'Pairwise_Comparison_Data_Frame' data frame
 # containing p values for each pairwise comparison.
@@ -48,11 +51,22 @@
 # (by using the given value of alpha for each pairwise comparison). The
 # default, TRUE, holds the experimentwise error rate at alpha and calculates
 # the comparisonwise error rate based on the number of pairwise comparisons.
+# Since this procedure assumes independence of correlations, the Šidák
+# correction, which is used when there is independence, is used (Šidák, 1967).
 
 
 # The Function
 
 Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Numbers_of_Observations, Identifiers, Data_Frame, Alpha = 0.05, Control_for_Experimentwise_Error = TRUE) {
+  if (missing(Correlation_Coefficients)) {
+    stop ("The 'Correlation_Coefficients' argument is missing.")
+  }
+  if (missing(Numbers_of_Observations)) {
+    stop ("The 'Numbers_of_Observations' argument is missing.")
+  }
+  if (missing(Identifiers)) {
+    stop ("The 'Identifiers' argument is missing.")
+  }
   Correlation_Coefficients_Name <- deparse(substitute(Correlation_Coefficients))
   Numbers_of_Observations_Name <- deparse(substitute(Numbers_of_Observations))
   Identifiers_Name <- deparse(substitute(Identifiers))
@@ -60,16 +74,18 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
     if (class(Data_Frame) != 'data.frame') {
       stop ("'Data_Frame' must be of class 'data.frame'.")
     }
-    Data_Frame <- Data_Frame[, c(Correlation_Coefficients_Name, Numbers_of_Observations_Name, Identifiers_Name)]
-    colnames(Data_Frame) <- c("Correlation_Coefficients", "Numbers_of_Observations", "Identifiers")
+    if (length(unique(length(Data_Frame[, which(colnames(Data_Frame) == Correlation_Coefficients_Name)]), length(Data_Frame[, which(colnames(Data_Frame) == Numbers_of_Observations_Name)]), length(Data_Frame[, which(colnames(Data_Frame) == Identifiers_Name)]))) != 1) {
+      stop ("'Correlation_Coefficients', 'Numbers_of_Observations', and 'Identifiers' must all contain the same number of elements.")
+    }
+    Data_Frame <- data.frame(Correlation_Coefficients = Data_Frame[, which(colnames(Data_Frame) == Correlation_Coefficients_Name)], Numbers_of_Observations = Data_Frame[, which(colnames(Data_Frame) == Numbers_of_Observations_Name)], Identifiers = Data_Frame[, which(colnames(Data_Frame) == Identifiers_Name)])
   } else if (missing(Data_Frame)) {
-    Data_Frame <- data.frame(Correlation_Coefficients, Numbers_of_Observations, Identifiers)
+    Data_Frame <- data.frame(Correlation_Coefficients = Correlation_Coefficients, Numbers_of_Observations = Numbers_of_Observations, Identifiers = Identifiers)
   }
   Correlation_Coefficients <- Data_Frame$Correlation_Coefficients
   Numbers_of_Observations <- Data_Frame$Numbers_of_Observations
   Identifiers <- Data_Frame$Identifiers
   if (!is.numeric(Correlation_Coefficients)) {
-    stop ("`Correlation_Coefficients' must be numeric.")
+    stop ("'Correlation_Coefficients' must be numeric.")
   }
   if (!is.numeric(Numbers_of_Observations)) {
     stop ("'Numbers_of_Observations' must be numeric.")
@@ -93,9 +109,9 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
   Function_for_Comparing_Correlation_Coefficients <- function (Correlation_Coefficient_1, Correlation_Coefficient_2, Number_of_Observations_1, Number_of_Observations_2) {
     (2 * (1 - pnorm(abs(((0.5 * log((1 + Correlation_Coefficient_1) / (1 - Correlation_Coefficient_1))) - (0.5 * log((1 + Correlation_Coefficient_2) / (1 - Correlation_Coefficient_2)))) / (((1 / (Number_of_Observations_1 - 3)) + (1 / (Number_of_Observations_2 - 3))) ^ 0.5)))))
   }
-  if (Control_for_Experimentwise_Error == TRUE) {
+  if (Control_for_Experimentwise_Error) {
     Corrected_Alpha <- 1 - ((1 - Alpha) ^ (1 / choose(length(Correlation_Coefficients), 2)))
-  } else {
+  } else if (!Control_for_Experimentwise_Error) {
     Corrected_Alpha <- Alpha
   }
   Comparison <- NULL
@@ -156,15 +172,16 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
   }
   while (i < length(Correlation_Coefficients)) {
     Counter_5 <- Counter_5 + 1
-    if (Counter_5 > length(Correlation_Coefficients)) {break}
+    if (Counter_5 > length(Correlation_Coefficients)) {
+      break
+    }
     for (j in i:length(Correlation_Coefficients)) {
       Nonsignificance_of_p_Value <- Matrix_of_p_Values[Row_Number[j], Row_Number[i]] > Corrected_Alpha
       if (Nonsignificance_of_p_Value) {
         if (Last_Character_Function(Separation_Lettering[j]) != Separation_Letters_and_Symbols[Counter_6]) {
           Separation_Lettering[j] <- paste(Separation_Lettering[j], Separation_Letters_and_Symbols[Counter_6], sep = "")
         }
-      }
-      else {
+      } else if (!Nonsignificance_of_p_Value) {
         Counter_6 <- Counter_6 + 1
         Counter_7 <- j
         Counter_8 <- 0
@@ -178,9 +195,10 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
             i <- i + 1
             Counter_8 <- 1
           }
-          else {break}
+          else if (Matrix_of_p_Values[Row_Number[l], Row_Number[Counter_7]] > Corrected_Alpha) {
+            break
+          }
         }
-        {break}
       }
     }
     if (Counter_8 == 0) {
@@ -199,7 +217,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
 # Here's an example with some made-up data.
 
 Practice_Data_Frame <- structure(list(Name = c("Correlation A", "Correlation B", "Correlation C", "Correlation D", "Correlation E"), Coefficient_of_Correlation = c(-0.339, 0.307, 0.919, -0.679, -0.495), Sample_Size = c(42L, 10L, 46L, 98L, 63L)), class = "data.frame", row.names = c(NA, -5L))
-Comparing_Correlation_Coefficients(Practice_Data_Frame$Coefficient_of_Correlation, Practice_Data_Frame$Sample_Size, Practice_Data_Frame$Name)
+Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame)
 
 # Here's the output from the preceding line of code.
 
@@ -238,3 +256,6 @@ Comparing_Correlation_Coefficients(Practice_Data_Frame$Coefficient_of_Correlatio
 # Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes
 # associated with correlations, proportions or variances. Br. J. Math. Stat.
 # Psychol. 30:137-139.
+
+# Šidák, Z.K. 1967. Rectangular Confidence Regions for the Means of
+# Multivariate Normal Distributions. J. Am. Stat. Assoc. 62: 626–633.
