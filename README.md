@@ -1,6 +1,6 @@
-# A Function for Comparing Multiple Correlation Coefficients in R
+# A Function for Comparing Multiple Correlation Coefficients From Independent Correlations in R
 
-This repository contains the code for an R function that will report p-values for pairwise correlation coefficient comparisons and that will report separation lettering for correlation coefficients. This code is based on the work of Levy (1977).
+This repository contains the code for comparing 3 or more correlation coefficients based on a well established and published method (Levy, 1977). Importantly, it assumes the correlations are independent. When independence cannot be assumed, please consider using a different procedure.
 
 This function takes 6 arguments, and the first 3 are required.
 
@@ -14,7 +14,7 @@ This function takes 6 arguments, and the first 3 are required.
 
 `Alpha = 0.05` is a value of alpha against which significance can be tested (the default is `0.05`).
 
-`Control_for_Experimentwise_Error = TRUE` is an argument specifying whether or not this function should give conservative estimates (by holding the experimentwise error rate at the given value of alpha) or liberal estimates (by using the given value of alpha for each pairwise comparison). The default, `TRUE`, holds the experimentwise error rate at alpha and calculates the comparisonwise error rate based on the number of pairwise comparisons.
+`Control_for_Experimentwise_Error = TRUE` is an argument specifying whether or not this function should give conservative estimates (by holding the experimentwise error rate at the given value of alpha) or liberal estimates (by using the given value of alpha for each pairwise comparison). The default, `TRUE`, holds the experimentwise error rate at alpha and calculates the comparisonwise error rate based on the number of pairwise comparisons. Since this procedure assumes independence of correlations, the Šidák correction, which is used when there is independence, is used (Šidák, 1967).
 
 Though this function only uses `base` functions, it was heavily inspired by the `agricolae` package, particularly the `orderPvalue()` and `lastC()` functions. Thank you Felipe de Mendiburu!
 
@@ -35,3 +35,5 @@ Findor, A., M. Hruska, P. Jankovská, and M. Pobudová. 2021. Re-examining publi
 Levy, K.J. 1977. Pairwise comparisons involving unequal sample sizes associated with correlations, proportions or variances. Br. J. Math. Stat. Psychol. 30:137-139.
 
 Matko, K., and P. Sedlmeier. 2023. Which meditation technique for whom? An experimental single-case study comparing concentrative, humming, observing-thoughts, and walking meditation.
+
+Šidák, Z.K. 1967. Rectangular Confidence Regions for the Means of Multivariate Normal Distributions. J. Am. Stat. Assoc. 62: 626–633.
