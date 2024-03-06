@@ -57,7 +57,7 @@
 
 # The Function
 
-Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Numbers_of_Observations, Identifiers, Data_Frame, Alpha = 0.05, Control_for_Experimentwise_Error = TRUE) {
+Comparing_Multiple_Independent_Correlation_Coefficients_Function <- function (Correlation_Coefficients, Numbers_of_Observations, Identifiers, Data_Frame, Alpha = 0.05, Control_for_Experimentwise_Error = TRUE) {
   if (missing(Correlation_Coefficients)) {
     stop ("The 'Correlation_Coefficients' argument is missing.")
   }
@@ -217,7 +217,7 @@ Comparing_Correlation_Coefficients <- function (Correlation_Coefficients, Number
 # Here's an example with some made-up data.
 
 Practice_Data_Frame <- structure(list(Name = c("Correlation A", "Correlation B", "Correlation C", "Correlation D", "Correlation E"), Coefficient_of_Correlation = c(-0.339, 0.307, 0.919, -0.679, -0.495), Sample_Size = c(42L, 10L, 46L, 98L, 63L)), class = "data.frame", row.names = c(NA, -5L))
-Comparing_Correlation_Coefficients(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame)
+Comparing_Multiple_Independent_Correlation_Coefficients_Function(Coefficient_of_Correlation, Sample_Size, Name, Practice_Data_Frame)
 
 # Here's the output from the preceding line of code.
 
